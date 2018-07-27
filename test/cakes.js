@@ -26,3 +26,68 @@ chai.use(chaiHttp);
             });
       });
   });
+
+	
+/*
+  * Test the /GET/:id route
+  */
+  describe('/GET /cakes/:id', () => {
+      it('it should GET one cakes cakes', (done) => {
+        chai.request(server)
+            .get('/cakes/:id')
+            .end((err, res) => {
+                res.should.have.status(200);
+                res.body.should.be.a('object');
+                
+              done();
+            });
+      });
+  });
+
+	
+/*
+  * Test the /PUT route
+  */
+  describe('/PUT /cakes', () => {
+      it('it should add a cake to the list', (done) => {
+        chai.request(server)
+            .put('/cakes')
+            .end((err, res) => {
+                res.should.have.status(200);
+                res.body.should.be.a('object');
+              done();
+            });
+      });
+  });
+
+	
+/*
+  * Test the /GET route
+  */
+  describe('/GET /cakes', () => {
+      it('it should GET all the cakes', (done) => {
+        chai.request(server)
+            .get('/cakes')
+            .end((err, res) => {
+                res.should.have.status(200);
+                res.body.should.be.a('object');
+              done();
+            });
+      });
+  });
+
+	
+/*
+  * Test the /GET route
+  */
+  describe('/GET /cakes', () => {
+      it('it should GET all the cakes', (done) => {
+        chai.request(server)
+            .get('/cakes')
+            .end((err, res) => {
+                res.should.have.status(200);
+                res.body.should.be.a('object');
+              done();
+            });
+      });
+  });
