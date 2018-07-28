@@ -8,10 +8,35 @@ const cakesDataTemplate = 'app/data/cakesTemplate.json';
 //TODO
 // Ajoute un gâteau à la liste existante de gâteaux. La requête devra contenir le JSON correspondant à la description d’un gâteau
 exports.create = function(req, res) {
-	var newCakes = req.body;
-    //cakes["Cakes" + newCakes.id] = newCakes;
-	console.log("--->After Post, cakes:\n" + JSON.stringify(newCakes, null, 4));
-    res.end("Post Successfully: \n" + JSON.stringify(newCakes, null, 4));
+    if(!req.body.title) {
+       res.end( "Vous devez au moins saisir un titre.");  
+    }else {
+
+	    // Cree un nouveau gateau selon le modele
+	    const cake = new cakesModel({
+	        title: req.body.title,
+	        desc: req.body.desc || "N/A",
+	        rating: req.body.rating || "N/A",
+	        image: req.body.image || "N/A"
+	    });
+
+		fs.readFile(cakesData, 'utf8', function readFileCallback(err, data){
+			if (err){
+				console.log(err);
+			} else {
+
+			obj = JSON.parse(data);
+			obj.push(cake);
+			cakesList = JSON.stringify(obj, null, 4);			
+			fs.writeFile(cakesData, cakesList, 'utf8', function (err) {
+				if (err) {
+					return console.log(err);
+				}		
+			}); 		
+			console.log( "--------- Gateau ajoute : --------- \n" + JSON.stringify(cake, null, 4));
+			res.end( "--------- Gateau ajoute : --------- \n" + JSON.stringify(cake, null, 4));
+		}});
+	}
 };
 
 
@@ -20,6 +45,7 @@ exports.create = function(req, res) {
 // Les images ne seront pas affichées dans la liste (même leur URL).
 	exports.getAll = function(req, res,callback) {
 		fs.readFile(cakesData, 'utf8', function readFileCallback(err, data){
+
 			if (err){
 				console.log(err);
 			} else {
@@ -52,10 +78,15 @@ exports.getByID = function(req, res, callback) {
 		if (err){
 			console.log(err);
 		} else {
-		obj = JSON.parse(data);
-		var Cakes = obj[req.params.id-1];
-		console.log("-------- Resultat trouve : -------- \n" + JSON.stringify(Cakes, null, 4));
-		res.end( "-------- Resultat trouve : -------- \n" + JSON.stringify(Cakes, null, 4));			
+			if(!data[req.params.id-1]) {
+            	res.end( "-------- Aucun resultat trouve pour l'id :" + req.params.id +" --------");  
+        	}
+        	else{ 
+				obj = JSON.parse(data);
+				var Cakes = obj[req.params.id-1];
+				console.log("-------- Resultat trouve : -------- \n" + JSON.stringify(Cakes, null, 4));
+				res.end( "-------- Resultat trouve : -------- \n" + JSON.stringify(Cakes, null, 4));			
+		}
 	}});
 };
 
@@ -91,8 +122,7 @@ exports.delete = function(req, res) {
 		obj = JSON.parse(data);
 		var deleteCakes = obj[req.params.id];
 		obj.splice(req.params.id,1);
-		cakesList = JSON.stringify(obj, null, 4);		
-		res.end( "-------- Resultat trouve : -------- \n" + cakesList);			
+		cakesList = JSON.stringify(obj, null, 4);			
 		fs.writeFile(cakesData, cakesList, 'utf8', function (err) {
 			if (err) {
 				return console.log(err);

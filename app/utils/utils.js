@@ -14,7 +14,7 @@
 			obj.sort(function(a, b) {
 			var noteA = a.rating;
 			var noteB = b.rating;
-			return (noteA < noteB) ? -1 : (noteA > noteB) ? 1 : 0;
+			return  (noteA < noteB) ? -1 : (noteA > noteB) ? 1 : 0 || (a.title>b.title) ;
 		});	
 	}	
 	
