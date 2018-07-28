@@ -48,13 +48,12 @@ chai.use(chaiHttp);
 /*
   * Test the /PUT route
   */
-  describe('/PUT /cakes', () => {
-      it('it should add a cake to the list', (done) => {
+  describe('/PUT /cakes/init', () => {
+      it('it should init the list', (done) => {
         chai.request(server)
             .put('/cakes')
             .end((err, res) => {
                 res.should.have.status(200);
-                res.body.should.be.a('object');
               done();
             });
       });
@@ -62,15 +61,15 @@ chai.use(chaiHttp);
 
 	
 /*
-  * Test the /GET route
+  * Test the /DELETE route
   */
-  describe('/GET /cakes', () => {
-      it('it should GET all the cakes', (done) => {
+  describe('/DELETE /cakes/:id', () => {
+      it('it should GET one cakes', (done) => {
         chai.request(server)
-            .get('/cakes')
+            .delete('/cakes/:id')
             .end((err, res) => {
                 res.should.have.status(200);
-                res.body.should.be.a('object');
+                //res.body.should.be.a('object');
               done();
             });
       });
