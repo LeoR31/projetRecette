@@ -51,7 +51,7 @@ chai.use(chaiHttp);
   describe('/PUT /cakes/init', () => {
       it('it should init the list', (done) => {
         chai.request(server)
-            .put('/cakes')
+            .put('/cakes/init')
             .end((err, res) => {
                 res.should.have.status(200);
               done();
