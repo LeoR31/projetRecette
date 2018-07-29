@@ -89,7 +89,7 @@ exports.getByID = function(req, res, callback) {
 				obj = JSON.parse(data);
 				var Cakes = obj[req.params.id-1];
 				console.log("-------- Resultat trouve : -------- \n" + JSON.stringify(Cakes, null, 4));
-				res.json(Cakes);
+				res.set({'Content-Type': 'application/json; charset=utf-8'}).send(JSON.stringify(Cakes, null, 4));
 		}
 	}});
 };

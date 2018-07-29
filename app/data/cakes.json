@@ -34,11 +34,5 @@
         "desc": "test",
         "rating": "test",
         "image": "test"
-    },
-    {
-        "title": "test",
-        "desc": "test",
-        "rating": "0",
-        "image": "azejaze"
     }
 ]
