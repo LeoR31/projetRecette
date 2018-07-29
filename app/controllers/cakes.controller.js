@@ -8,8 +8,8 @@ const cakesDataTemplate = 'app/data/cakesTemplate.json';
 //TODO
 // Ajoute un gâteau à la liste existante de gâteaux. La requête devra contenir le JSON correspondant à la description d’un gâteau
 exports.create = function(req, res) {
-    if(!req.body.title) {
-       res.end( "Vous devez au moins saisir un titre.");  
+    if(!req.body.title || !req.body.desc || !req.body.rating || !req.body.image) {
+       res.end( "Vous devez saisir la description complete de la recette (title, desc, rating, image).");  
     }else {
 
 	    // Cree un nouveau gateau selon le modele
@@ -34,7 +34,7 @@ exports.create = function(req, res) {
 				}		
 			}); 		
 			console.log( "--------- Gateau ajoute : --------- \n" + JSON.stringify(cake, null, 4));
-			res.end( "--------- Gateau ajoute : --------- \n" + JSON.stringify(cake, null, 4));
+			res.json({'SUCCESS': cake});
 		}});
 	}
 };
@@ -48,6 +48,7 @@ exports.create = function(req, res) {
 
 			if (err){
 				console.log(err);
+				res.json({'ERROR': err});
 			} else {
 			obj = JSON.parse(data); 
 			
@@ -58,12 +59,14 @@ exports.create = function(req, res) {
 				utils.triParNote(obj);	
 				json = JSON.stringify(obj, utils.hideImg, 4);
 				console.log("------ Liste de toutes les recettes triees par note -------: \n" + json);
-				res.end("------ Liste de toutes les recettes triees par note -------: \n" + json); 
+				//res.end("------ Liste de toutes les recettes triees par note -------: \n" + json);
+				res.set({'Content-Type': 'application/json; charset=utf-8'}).send(json);
 			} else {
 				utils.triParDefaut(obj);
 				json = JSON.stringify(obj, utils.hideImg, 4); 
 				console.log("------ Liste de toutes les recettes triees par ordre alphabetique -------: \n" + json);
-				res.end("------ Liste de toutes les recettes triees par ordre alphabetique -------: \n" + json); 
+				//res.end("------ Liste de toutes les recettes triees par ordre alphabetique -------: \n" + json); 
+				res.set({'Content-Type': 'application/json; charset=utf-8'}).send(json)
 			}
 
 		}});	
@@ -77,6 +80,7 @@ exports.getByID = function(req, res, callback) {
 	fs.readFile(cakesData, 'utf8', function readFileCallback(err, data){
 		if (err){
 			console.log(err);
+			res.json({'ERROR': err});
 		} else {
 			if(!data[req.params.id-1]) {
             	res.end( "-------- Aucun resultat trouve pour l'id :" + req.params.id +" --------");  
@@ -85,7 +89,7 @@ exports.getByID = function(req, res, callback) {
 				obj = JSON.parse(data);
 				var Cakes = obj[req.params.id-1];
 				console.log("-------- Resultat trouve : -------- \n" + JSON.stringify(Cakes, null, 4));
-				res.end( "-------- Resultat trouve : -------- \n" + JSON.stringify(Cakes, null, 4));			
+				res.json(Cakes);
 		}
 	}});
 };
@@ -99,6 +103,7 @@ exports.init = function(req, res) {
 	fs.readFile(cakesDataTemplate, 'utf8', function readFileCallback(err, data){
 		if (err){
 			console.log(err);
+			res.json({'ERROR': err});
 		} else {
 			obj = JSON.parse(data);
 			cakesList = JSON.stringify(obj, null, 4);				
@@ -107,7 +112,7 @@ exports.init = function(req, res) {
 						return console.log(err);
 					}
 					console.log("Liste reinitialisee avec succes !");
-					res.end("Liste reinitialisee avec succes !"); 			
+					res.json({'INIT': data});
 				}); 
 	}});
 };
@@ -117,6 +122,7 @@ exports.delete = function(req, res) {
 	fs.readFile(cakesData, 'utf8', function readFileCallback(err, data){
 		if (err){
 			console.log(err);
+			res.json({'ERROR': err});
 		} else {
 
 		obj = JSON.parse(data);
@@ -129,7 +135,7 @@ exports.delete = function(req, res) {
 			}		
 		}); 		
 		console.log( "--------- Gateau supprime : --------- \n" + JSON.stringify(deleteCakes, null, 4));
-		res.end( "--------- Gateau supprime : --------- \n" + JSON.stringify(deleteCakes, null, 4));
+		res.json({'REMOVED': deleteCakes});
 	}});	
 	
 };
